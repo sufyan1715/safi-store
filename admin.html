@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Safi Store Admin</title>
+<style>
+:root{--bg:#f1f5f9;--s:#fff;--t:#0f172a;--m:#64748b;--b:#e2e8f0;--g:#059669}
+@media(prefers-color-scheme:dark){:root{--bg:#0b1120;--s:#111827;--t:#e5e7eb;--m:#94a3b8;--b:#1f2937}}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,sans-serif;background:var(--bg);color:var(--t)}
+header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#0f172a;color:#fff}
+main{max-width:900px;margin:0 auto;padding:14px}nav{display:flex;gap:8px;margin-bottom:12px;overflow-x:auto}
+.card{background:var(--s);border:1px solid var(--b);border-radius:14px;padding:14px;margin-bottom:10px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+button{font:inherit;font-size:13px;font-weight:600;border-radius:10px;padding:8px 12px;border:1px solid var(--b);background:var(--s);color:var(--t);cursor:pointer;white-space:nowrap}
+.on,.pri{background:var(--g);color:#fff;border:0}.no{color:#ef4444}
+input{width:100%;font:inherit;font-size:14px;padding:10px;margin:4px 0;border:1px solid var(--b);border-radius:10px;background:var(--bg);color:var(--t)}
+p{margin:6px 0}.mut{color:var(--m)}code{background:var(--bg);padding:2px 6px;border-radius:6px}.st{font-size:12px;font-weight:700}
+#login{max-width:340px;margin:12vh auto;padding:0 14px}[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div id="login"><div class="card"><h2>Admin sign in</h2><input id="em" type="email" placeholder="Email" autocomplete="username"><input id="pw" type="password" placeholder="Password" autocomplete="current-password"><p id="le" class="no"></p><button class="pri" style="width:100%" onclick="signin()">Sign in</button></div></div>
+<div id="app" hidden><header><b>Safi Store Admin</b><button onclick="out()">Sign out</button></header><main><nav id="nav"></nav><div id="v"></div></main></div>
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import{getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import{getFirestore,collection,doc,addDoc,setDoc,updateDoc,deleteDoc,onSnapshot,query,orderBy}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+const app=initializeApp({apiKey:"AIzaSyA_jgYlILvsm9BkBGWf41U2TCTjeY82R34",authDomain:"safi-store17.firebaseapp.com",projectId:"safi-store17",storageBucket:"safi-store17.firebasestorage.app",messagingSenderId:"62886587773",appId:"1:62886587773:web:5d22bf939498c9a137b014"}),auth=getAuth(app),db=getFirestore(app);
+const $=id=>document.getElementById(id),esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),money=n=>'₨ '+Number(n||0).toLocaleString();
+let T='orders',O=[],PR=[],G={},Q='',subs=[],idle,fails=0,lock=0;
+const TABS={orders:'Orders',prods:'Products',pay:'Payment accounts'};
+async function signin(){if(Date.now()<lock)return $('le').textContent='Too many attempts. Wait 30 seconds.';
+ try{await signInWithEmailAndPassword(auth,$('em').value.trim(),$('pw').value);fails=0}catch(e){if(++fails>=5){lock=Date.now()+30000;fails=0}$('le').textContent='Wrong email or password.'}}
+const out=()=>signOut(auth);
+onAuthStateChanged(auth,u=>{subs.forEach(f=>f());subs=[];$('login').hidden=!!u;$('app').hidden=!u;if(!u)return;
+ subs.push(onSnapshot(query(collection(db,'orders'),orderBy('ts','desc')),s=>{O=s.docs.map(d=>({id:d.id,...d.data()}));render()},()=>alert('Cannot read orders. Check that your admin email is in the Firestore rules.')));
+ subs.push(onSnapshot(collection(db,'products'),s=>{PR=s.docs.map(d=>({id:d.id,...d.data()}));render()}));
+ subs.push(onSnapshot(doc(db,'settings','payments'),s=>{G=s.exists()?s.data():{};render()}))});
+['click','keydown','touchstart'].forEach(e=>document.addEventListener(e,()=>{clearTimeout(idle);idle=setTimeout(()=>auth.currentUser&&signOut(auth),600000)}));
+function render(){if(document.activeElement&&/INPUT/.test(document.activeElement.tagName)&&document.activeElement.id!=='q')return;
+ $('nav').innerHTML=Object.keys(TABS).map(k=>`<button class="${k===T?'on':''}" onclick="T='${k}';render()">${TABS[k]}</button>`).join('');$('v').innerHTML=V[T]()}
+const V={
+orders(){const q=Q.toLowerCase(),L=O.filter(o=>!q||(o.id+o.name+o.phone+o.tid).toLowerCase().includes(q)),rev=O.filter(o=>o.status==='PAID'||o.status==='DELIVERED').reduce((a,o)=>a+(+o.total||0),0);
+ return`<p>Verified revenue <b>${money(rev)}</b> · Pending <b>${O.filter(o=>o.status==='PENDING').length}</b></p><input id="q" placeholder="Search name, phone, order or TID" value="${esc(Q)}" onchange="Q=this.value;render()">`+(L.map(o=>{const dup=O.some(x=>x!==o&&String(x.tid).toLowerCase()===String(o.tid).toLowerCase());
+ return`<div class="card"><div class="row"><b>${esc(o.id.slice(0,6).toUpperCase())}</b><span class="st">${esc(o.status)}</span></div><p>${esc(o.name)}<br>${esc(o.phone)}<br>${esc(o.address)}</p><p class="mut">${(o.items||[]).map(i=>esc(i.name)+' ×'+esc(i.qty)).join(', ')}</p><p><b>${money(o.total)}</b> via ${esc(o.method)}<br>TID <code>${esc(o.tid)}</code>${dup?' <b class="no">duplicate TID</b>':''}</p><div class="row" style="justify-content:flex-start">${o.status==='PENDING'?`<button class="pri" onclick="st('${o.id}','PAID')">Approve</button><button onclick="st('${o.id}','REJECTED')">Reject</button>`:o.status==='PAID'?`<button class="pri" onclick="st('${o.id}','DELIVERED')">Mark delivered</button>`:''}</div></div>`}).join('')||'<p class="mut">No orders yet.</p>')},
+prods(){return`<div class="card"><input id="pn" placeholder="Product name" maxlength="80"><input id="pp" type="number" min="1" step="any" placeholder="Price"><input id="pi" placeholder="Image link (https://...)"><button class="pri" onclick="addP()">Add product</button></div>`+(PR.map(p=>`<div class="card row"><span><b>${esc(p.name)}</b><br>${money(p.price)} ${p.active===false?'<span class="no">(hidden)</span>':''}</span><span><button onclick="editP('${p.id}')">Edit</button> <button onclick="hideP('${p.id}')">${p.active===false?'Show':'Hide'}</button> <button class="no" onclick="delP('${p.id}')">Delete</button></span></div>`).join('')||'<p class="mut">No products yet. Add your first product above.</p>')},
+pay(){return['JazzCash','EasyPaisa'].map(k=>{const g=G[k]||{};return`<div class="card"><div class="row"><b>${k}</b><label><input type="checkbox" id="on-${k}" style="width:auto" ${g.on?'checked':''}> Active</label></div><input id="ti-${k}" placeholder="Account title" value="${esc(g.title)}"><input id="nu-${k}" inputmode="numeric" placeholder="03XXXXXXXXX" value="${esc(g.num)}"><button class="pri" onclick="savePay('${k}')">Save ${k}</button></div>`}).join('')}};
+async function st(id,s){if(s!=='DELIVERED'&&!confirm(s==='PAID'?'Check in your JazzCash/EasyPaisa app that this exact amount and TID arrived. Approve?':'Reject this order?'))return;await updateDoc(doc(db,'orders',id),{status:s})}
+async function addP(){const n=$('pn').value.trim(),p=parseFloat($('pp').value),i=$('pi').value.trim();if(!n||!(p>0))return alert('Enter a name and a price above 0.');if(i&&!/^https:\/\//.test(i))return alert('The image link must start with https://');await addDoc(collection(db,'products'),{name:n,price:p,img:i,active:true})}
+async function editP(id){const p=PR.find(x=>x.id===id),n=prompt('Product name',p.name);if(n===null)return;const v=parseFloat(prompt('Price',p.price));if(!n.trim()||!(v>0))return alert('Enter a name and a price above 0.');await updateDoc(doc(db,'products',id),{name:n.trim(),price:v})}
+const hideP=id=>updateDoc(doc(db,'products',id),{active:PR.find(x=>x.id===id).active===false}),delP=id=>confirm('Delete this product?')&&deleteDoc(doc(db,'products',id));
+async function savePay(k){const t=$('ti-'+k).value.trim(),n=$('nu-'+k).value.replace(/[\s-]/g,'');if(!t)return alert('Enter the account title.');if(!/^03\d{9}$/.test(n))return alert('Number must be 11 digits, like 03001234567.');await setDoc(doc(db,'settings','payments'),{[k]:{title:t,num:n,on:$('on-'+k).checked}},{merge:true});alert(k+' saved.')}
+Object.assign(window,{signin,out,render,st,addP,editP,hideP,delP,savePay,V,Q:0});
+Object.defineProperty(window,'T',{get:()=>T,set:v=>T=v});Object.defineProperty(window,'Q',{get:()=>Q,set:v=>Q=v});
+</script>
+</body>
+</html>
