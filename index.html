@@ -2,58 +2,206 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Safi Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f8fafc;--s:#fff;--t:#0f172a;--m:#64748b;--b:#e2e8f0;--g:#059669}
-@media(prefers-color-scheme:dark){:root{--bg:#0b1120;--s:#111827;--t:#e5e7eb;--m:#94a3b8;--b:#1f2937}}
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,sans-serif;background:var(--bg);color:var(--t)}
-header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:var(--s);border-bottom:1px solid var(--b);position:sticky;top:0;z-index:5}
+:root{--bg:#f6f7fb;--s:#fff;--t:#0b1220;--m:#667085;--b:#e6e8f0;--g1:#10b981;--g2:#06b6d4;--sh:0 12px 32px -14px rgba(15,23,42,.22)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#070b14;--s:#0f1626;--t:#eef2ff;--m:#93a0b8;--b:#1b2438;--sh:0 12px 32px -14px rgba(0,0,0,.7)}}
+:root[data-theme="dark"]{--bg:#070b14;--s:#0f1626;--t:#eef2ff;--m:#93a0b8;--b:#1b2438;--sh:0 12px 32px -14px rgba(0,0,0,.7)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:"Plus Jakarta Sans",system-ui,sans-serif;background:var(--bg);color:var(--t);padding-bottom:84px}
+[hidden]{display:none!important}
+header{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;padding-top:calc(12px + env(safe-area-inset-top,0px));background:color-mix(in srgb,var(--bg) 80%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--b)}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:-.02em}
+.mark{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--g1),var(--g2));box-shadow:0 8px 18px -8px var(--g1)}
+#cb{display:flex;align-items:center;gap:8px;border:1px solid var(--b);background:var(--s);color:var(--t);font:inherit;font-weight:700;font-size:14px;padding:9px 14px;border-radius:999px;cursor:pointer;box-shadow:var(--sh)}
+#cn{min-width:22px;height:22px;border-radius:99px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#fff;font-size:12px;display:grid;place-items:center;padding:0 6px}
 main{max-width:1100px;margin:0 auto;padding:16px}
-#grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
-.card{background:var(--s);border:1px solid var(--b);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:6px}
-.card img{width:100%;height:150px;object-fit:cover;border-radius:10px}
-h3{margin:0;font-size:15px}.pr{margin:0;color:var(--g);font-weight:700}.mut,small{color:var(--m)}
-button{font:inherit;font-size:14px;font-weight:600;border-radius:10px;padding:9px 14px;border:1px solid var(--b);background:var(--s);color:var(--t);cursor:pointer}
-.pri,.card button{background:var(--g);color:#fff;border:0}
-input,textarea{width:100%;font:inherit;font-size:14px;padding:10px;margin:4px 0;border:1px solid var(--b);border-radius:10px;background:var(--bg);color:var(--t)}
-#md{position:fixed;inset:0;background:rgba(2,6,23,.7);display:flex;align-items:center;justify-content:center;padding:14px;z-index:9}
-#md[hidden]{display:none}
-.box{background:var(--s);border-radius:16px;padding:18px;width:100%;max-width:420px;max-height:90vh;overflow:auto}
-.row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--b)}
-.tot{font-weight:700;font-size:17px}.err{color:#ef4444;font-size:13px;min-height:18px}.sel{outline:2px solid var(--g)}
+.hero{border-radius:28px;padding:28px 22px;border:1px solid var(--b);box-shadow:var(--sh);background:radial-gradient(120% 140% at 0 0,color-mix(in srgb,var(--g1) 28%,transparent),transparent 55%),radial-gradient(100% 120% at 100% 0,color-mix(in srgb,var(--g2) 26%,transparent),transparent 50%),var(--s)}
+.hero h1{margin:0 0 8px;font-size:clamp(28px,6vw,46px);line-height:1.05;letter-spacing:-.035em;font-weight:800}
+.hero p{margin:0 0 16px;color:var(--m);max-width:460px;line-height:1.5}
+.chips{display:flex;gap:8px;flex-wrap:wrap}.chip{font-size:12px;font-weight:700;padding:7px 12px;border-radius:99px;background:var(--s);border:1px solid var(--b)}
+.search{margin:18px 0 14px;position:relative}
+.search input{width:100%;font:inherit;font-size:15px;padding:14px 16px;border-radius:16px;border:1px solid var(--b);background:var(--s);color:var(--t);box-shadow:var(--sh)}
+h2.sec{margin:6px 2px 12px;font-size:20px;letter-spacing:-.02em}
+#grid{display:grid;grid-template-columns:repeat(var(--c,2),1fr);gap:12px}
+@media(min-width:700px){#grid{grid-template-columns:repeat(auto-fill,minmax(var(--w,220px),1fr));gap:16px}}
+.card{background:var(--s);border:1px solid var(--b);border-radius:22px;padding:10px;display:flex;flex-direction:column;gap:6px;box-shadow:var(--sh);transition:transform .2s,border-color .2s}
+.card:hover{transform:translateY(-3px);border-color:var(--g1)}
+.im{position:relative;aspect-ratio:1;border-radius:16px;overflow:hidden;background:linear-gradient(135deg,color-mix(in srgb,var(--g1) 14%,var(--b)),color-mix(in srgb,var(--g2) 14%,var(--b)))}
+.im img{position:relative;z-index:1;width:100%;height:100%;object-fit:cover;display:block}
+.ph{position:absolute;inset:0;display:grid;place-items:center;font-size:44px;font-weight:800;color:var(--m);opacity:.6}
+h3{margin:4px 4px 0;font-size:15px;font-weight:700;letter-spacing:-.01em}
+.pr{margin:0 4px;font-weight:800;font-size:16px;background:linear-gradient(135deg,var(--g1),var(--g2));-webkit-background-clip:text;background-clip:text;color:transparent}
+button{font:inherit;cursor:pointer}
+.add,.pri{border:0;color:#fff;font-weight:700;font-size:14px;padding:12px 14px;border-radius:14px;background:linear-gradient(135deg,var(--g1),var(--g2));transition:transform .15s,filter .2s}
+.add:active,.pri:active{transform:scale(.97)}.add:hover,.pri:hover{filter:brightness(1.08)}
+.ghost{border:1px solid var(--b);background:var(--s);color:var(--t);font-weight:600;font-size:14px;padding:11px 14px;border-radius:14px}
+.sk{aspect-ratio:3/4;border-radius:22px;background:linear-gradient(100deg,var(--b) 30%,color-mix(in srgb,var(--b) 40%,var(--s)) 50%,var(--b) 70%);background-size:200% 100%;animation:sh 1.2s infinite}
+@keyframes sh{to{background-position:-200% 0}}
+.mut,small{color:var(--m)}.empty{grid-column:1/-1;text-align:center;padding:40px 0}
+footer{text-align:center;color:var(--m);font-size:13px;padding:28px 16px}
+#fb{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:6;width:min(92vw,460px);display:flex;justify-content:space-between;align-items:center;border:0;color:#fff;font-weight:700;font-size:15px;padding:15px 20px;border-radius:20px;background:linear-gradient(135deg,var(--g1),var(--g2));box-shadow:0 18px 36px -12px var(--g1)}
+#md{position:fixed;inset:0;z-index:9;display:flex;align-items:flex-end;justify-content:center;background:rgba(2,6,23,.6);backdrop-filter:blur(4px)}
+@media(min-width:640px){#md{align-items:center;padding:16px}}
+.box{background:var(--s);width:100%;max-width:480px;max-height:92vh;overflow:auto;border-radius:28px 28px 0 0;padding:20px;padding-bottom:calc(20px + env(safe-area-inset-bottom,0px));animation:up .25s ease}
+@media(min-width:640px){.box{border-radius:28px}}
+@keyframes up{from{transform:translateY(30px);opacity:0}}
+.box h2{margin:0 0 10px;letter-spacing:-.02em}
+.row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--b)}
+.q{width:32px;height:32px;border-radius:10px;border:1px solid var(--b);background:var(--bg);color:var(--t);font-weight:700}
+.tot{font-weight:800;font-size:18px;margin:14px 0}
+input,textarea{width:100%;font:inherit;font-size:15px;padding:13px 14px;margin:5px 0;border:1px solid var(--b);border-radius:14px;background:var(--bg);color:var(--t)}
+.pays{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}.pays button{flex:1 1 45%;padding:12px;border-radius:14px;border:1px solid var(--b);background:var(--bg);color:var(--t);font-weight:700}
+.pays .sel{border-color:var(--g1);box-shadow:0 0 0 2px color-mix(in srgb,var(--g1) 35%,transparent)}
+.err{color:#ef4444;font-size:13px;min-height:18px;margin:4px 0}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:90px;z-index:12;background:var(--t);color:var(--bg);padding:10px 16px;border-radius:99px;font-size:13px;font-weight:600}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.hero{position:relative;overflow:hidden}.hero>*:not(.orb){position:relative;z-index:1}
+.orb{position:absolute;border-radius:50%;filter:blur(40px);opacity:.55;animation:fl 9s ease-in-out infinite alternate}
+.o1{width:220px;height:220px;right:-60px;top:-70px;background:var(--g1)}.o2{width:180px;height:180px;right:90px;bottom:-90px;background:var(--g2);animation-delay:-4s}
+@keyframes fl{to{transform:translate(-30px,24px) scale(1.15)}}
+.mq{overflow:hidden;margin:16px 0 6px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.mq div{display:flex;gap:28px;width:max-content;animation:mq 26s linear infinite;font-weight:700;color:var(--m);font-size:12px;text-transform:uppercase;letter-spacing:.14em}
+@keyframes mq{to{transform:translateX(-50%)}}
+.seg{display:flex;gap:8px;overflow-x:auto;margin:6px 0 14px;padding-bottom:2px}
+.seg button{white-space:nowrap;border:1px solid var(--b);background:var(--s);color:var(--t);font-weight:600;font-size:13px;padding:9px 14px;border-radius:99px}
+.seg .on{border-color:transparent;color:#fff;background:linear-gradient(135deg,var(--g1),var(--g2))}
+.card{position:relative;animation:rise .55s backwards;animation-delay:calc(var(--i,0)*70ms)}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}}
+.card::after{content:"";position:absolute;inset:0;border-radius:22px;pointer-events:none;opacity:0;transition:opacity .25s;background:radial-gradient(240px circle at var(--mx,50%) var(--my,50%),color-mix(in srgb,var(--g1) 18%,transparent),transparent 70%)}
+.card:hover::after{opacity:1}
+.hrt{position:absolute;top:16px;right:16px;z-index:3;width:34px;height:34px;border-radius:50%;border:0;background:color-mix(in srgb,var(--s) 80%,transparent);backdrop-filter:blur(8px);color:var(--m);font-size:16px}.hrt.on{color:#f43f5e}
+.im{cursor:zoom-in}.im img{transition:transform .5s}.card:hover .im img{transform:scale(1.07)}
+.ic{width:42px;height:42px;border-radius:50%;border:1px solid var(--b);background:var(--s);color:var(--t);font-size:17px;box-shadow:var(--sh)}
+.bump{animation:bp .4s}@keyframes bp{40%{transform:scale(1.12)}}
+.im.big{margin-bottom:12px;cursor:default}.pr.big{font-size:22px;margin:0 0 8px}
+.cf{position:fixed;inset:0;pointer-events:none;z-index:20;overflow:hidden}
+.cf i{position:absolute;top:-14px;width:9px;height:14px;border-radius:2px;animation:fall 1.8s ease-in forwards}
+@keyframes fall{to{transform:translateY(105vh) rotate(var(--r))}}
+.search{display:flex;gap:8px}.search input{flex:1}
+.sbtn{border:0;color:#fff;font-weight:700;padding:0 20px;border-radius:16px;background:linear-gradient(135deg,var(--g1),var(--g2))}
+.cats{display:flex;gap:14px;overflow-x:auto;padding:2px 2px 12px;scrollbar-width:none}.cats::-webkit-scrollbar,.deals::-webkit-scrollbar{display:none}
+.cat{flex:0 0 76px;text-align:center;background:none;border:0;color:var(--t);font-size:12px;font-weight:600;padding:0}
+.cat .ci{width:64px;height:64px;margin:0 auto 6px;border-radius:50%;overflow:hidden;display:grid;place-items:center;font-size:24px;font-weight:800;border:2px solid var(--b);background:var(--s);color:var(--m)}
+.cat.on .ci{border-color:var(--g1)}.cat .ci img{width:100%;height:100%;object-fit:cover}
+.deals{display:flex;gap:12px;overflow-x:auto;padding:2px 2px 14px;scroll-snap-type:x mandatory;scrollbar-width:none}
+.deals .card{flex:0 0 158px;scroll-snap-align:start}
+.sv{position:absolute;top:16px;left:16px;z-index:3;background:#ef4444;color:#fff;font-size:11px;font-weight:800;padding:4px 8px;border-radius:9px 9px 9px 2px}
+.old{margin:-4px 4px 0;font-size:12px;color:var(--m);text-decoration:line-through}
+#bn{position:fixed;left:0;right:0;bottom:0;z-index:6;display:flex;background:color-mix(in srgb,var(--s) 88%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--b);padding-bottom:env(safe-area-inset-bottom,0px)}
+#bn button{flex:1;border:0;background:none;color:var(--m);font-size:11px;font-weight:600;padding:8px 0 10px;display:flex;flex-direction:column;align-items:center;gap:3px}
+#bn b{font-size:20px;line-height:1;position:relative;color:var(--t)}
+#bn i{position:absolute;top:-6px;right:-12px;min-width:16px;height:16px;border-radius:99px;background:#ef4444;color:#fff;font-size:10px;font-style:normal;display:grid;place-items:center;padding:0 4px}
+#bn i:empty{display:none}
+.hero h1,.hero p{opacity:0;transition:opacity .3s}.hero.ready h1,.hero.ready p{opacity:1}
+#grid .bigc{grid-column:1/-1}.bigc .im{aspect-ratio:16/10}.deals .bigc{flex-basis:300px}
+#cp{position:fixed;inset:0;z-index:10;background:var(--bg);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
+.cph{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--b);font-size:18px;background:var(--s)}.cph button{border:0;background:none;color:var(--t);font-size:24px;padding:0 6px}
+.cpb{flex:1;display:flex;min-height:0}
+#cpl{width:104px;overflow-y:auto;background:var(--s);border-right:1px solid var(--b)}
+#cpl button{display:block;width:100%;text-align:left;border:0;background:none;color:var(--m);font-size:13px;font-weight:600;padding:16px 10px;border-left:3px solid transparent}
+#cpl .on{color:var(--t);background:var(--bg);border-left-color:var(--g1)}
+#cpr{flex:1;overflow-y:auto;padding:14px}.cpt{margin:0 0 12px;font-size:16px}
+.tg3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 8px}
+.tl{border:0;background:none;color:var(--t);font-size:12px;font-weight:600;text-align:center;padding:0}
+.ti{aspect-ratio:1;border-radius:14px;overflow:hidden;margin-bottom:6px;display:grid;place-items:center;background:var(--b);font-size:22px;font-weight:800;color:var(--m)}.ti img{width:100%;height:100%;object-fit:cover}
 </style>
 </head>
 <body>
-<header><b>Safi Store</b><button id="cb">Cart (<span id="cn">0</span>)</button></header>
-<main><div id="grid"><p class="mut">Loading products...</p></div></main>
-<div id="md" hidden><div class="box"><div id="mb"></div><p><button onclick="closeM()" style="width:100%">Close</button></p></div></div>
+<header><div class="logo"><span class="mark">S</span>Safi Store</div><div style="display:flex;gap:8px;align-items:center"><button id="tg" class="ic" onclick="theme()" aria-label="Theme">◐</button><button id="cb">Cart <span id="cn">0</span></button></div></header>
+<main>
+ <section class="hero"><i class="orb o1"></i><i class="orb o2"></i><h1 id="hh">Pick what you love.</h1><p id="hp">Simple checkout, delivered to your door. Pay with your mobile wallet.</p><div class="chips" id="hc"><span class="chip">JazzCash</span><span class="chip">EasyPaisa</span></div></section>
+ <div class="mq" id="mq"></div>
+ <div class="search"><input id="q" type="search" placeholder="Search products" oninput="grid()"><button class="sbtn" onclick="grid()">Search</button></div>
+ <div class="cats" id="cats" hidden></div>
+ <section id="dealsec" hidden><h2 class="sec">🔥 Hot deals</h2><div class="deals" id="deals"></div></section>
+ <div id="flt" style="margin-bottom:8px"></div>
+ <div class="seg" id="seg"><button class="on" data-s="">All</button><button data-s="lo">Price ↑</button><button data-s="hi">Price ↓</button><button data-s="fav">♥ Saved</button></div>
+ <h2 class="sec">Shop</h2>
+ <div id="grid"><div class="sk"></div><div class="sk"></div><div class="sk"></div><div class="sk"></div></div>
+</main>
+<footer>Safi Store · Thank you for shopping</footer>
+<nav id="bn"><button onclick="home()"><b>⌂</b>Home</button><button onclick="catSheet()"><b>▦</b>Categories</button><button onclick="deals()"><b>%</b>Deals</button><button onclick="cart()"><b>🛒<i id="nb"></i></b>Cart</button></nav>
+<div id="cp" hidden><div class="cph"><button onclick="closeCP()" aria-label="Back">←</button><b>Categories</b></div><div class="cpb"><div id="cpl"></div><div id="cpr"></div></div></div>
+<div id="toast" hidden></div>
+<div id="md" hidden onclick="if(event.target===this)closeM()"><div class="box"><div id="mb"></div><p><button class="ghost" onclick="closeM()" style="width:100%">Close</button></p></div></div>
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import{getFirestore,collection,getDocs,getDoc,doc,addDoc,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import{getFirestore,collection,getDocs,getDoc,doc,addDoc,serverTimestamp,setDoc,increment}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 const db=getFirestore(initializeApp({apiKey:"AIzaSyA_jgYlILvsm9BkBGWf41U2TCTjeY82R34",authDomain:"safi-store17.firebaseapp.com",projectId:"safi-store17",storageBucket:"safi-store17.firebasestorage.app",messagingSenderId:"62886587773",appId:"1:62886587773:web:5d22bf939498c9a137b014"}));
 const $=id=>document.getElementById(id),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),money=n=>'₨ '+Number(n).toLocaleString();
-let P=[],G={},M='',C={};try{C=JSON.parse(localStorage.getItem('safi_cart'))||{}}catch(e){}
-const sv=()=>{try{localStorage.setItem('safi_cart',JSON.stringify(C))}catch(e){}$('cn').textContent=Object.values(C).reduce((a,b)=>a+b,0)};
-const show=h=>{$('mb').innerHTML=h;$('md').hidden=false},closeM=()=>{$('md').hidden=true},err=m=>{$('er').textContent=m};
-function grid(){$('grid').innerHTML=P.length?P.map(p=>`<div class="card">${/^https:\/\//.test(p.img||'')?`<img src="${esc(p.img)}" alt="">`:''}<h3>${esc(p.name)}</h3><p class="pr">${money(p.price)}</p><button onclick="add('${p.id}')">Add to cart</button></div>`).join(''):'<p class="mut">No products yet. Please check back soon.</p>'}
-function add(id){C[id]=(C[id]||0)+1;sv()}
-function qty(id,d){C[id]=(C[id]||0)+d;if(C[id]<1)delete C[id];sv();cart()}
+const okImg=s=>/^(https:\/\/|data:image\/jpeg;base64,)/.test(s||'');
+let P=[],G={},M='',C={},th;try{C=JSON.parse(localStorage.getItem('safi_cart'))||{}}catch(e){}
 const lines=()=>Object.keys(C).map(id=>({p:P.find(x=>x.id===id),q:C[id]})).filter(x=>x.p),total=()=>lines().reduce((a,x)=>a+x.p.price*x.q,0);
-function cart(){const L=lines();show('<h2>Your cart</h2>'+(L.length?L.map(x=>`<div class="row"><span>${esc(x.p.name)}<br><small>${money(x.p.price)}</small></span><span><button onclick="qty('${x.p.id}',-1)">−</button> ${x.q} <button onclick="qty('${x.p.id}',1)">+</button></span></div>`).join('')+`<p class="tot">Total ${money(total())}</p><button class="pri" style="width:100%" onclick="co()">Checkout</button>`:'<p>Your cart is empty.</p>'))}
-function co(){const on=Object.keys(G).filter(k=>G[k].on&&G[k].num);if(!on.length)return show('<h2>Checkout</h2><p>Online payment is not available right now. Please try again later.</p>');M=on[0];
- show(`<h2>Checkout</h2><input id="nm" placeholder="Your name" maxlength="80"><input id="ph" inputmode="tel" placeholder="Mobile number, like 03001234567"><textarea id="ad" rows="2" placeholder="Full delivery address" maxlength="300"></textarea><p class="tot">Pay ${money(total())} to:</p><div style="display:flex;gap:8px">${on.map(k=>`<button id="m-${k}" style="flex:1" onclick="pick('${k}')">${k}</button>`).join('')}</div><p id="gi"></p><input id="tid" placeholder="Transaction ID from your payment slip" maxlength="40"><p id="er" class="err"></p><button id="pb" class="pri" style="width:100%" onclick="place()">Place order</button>`);pick(M)}
-function pick(k){M=k;Object.keys(G).forEach(x=>{const b=$('m-'+x);if(b)b.className=x===k?'sel':''});$('gi').innerHTML=`Send the money to <b>${esc(G[k].num)}</b> (${esc(G[k].title)}), then enter the Transaction ID below.`}
+function sv(){try{localStorage.setItem('safi_cart',JSON.stringify(C))}catch(e){}const n=Object.values(C).reduce((a,b)=>a+b,0);$('cn').textContent=n;$('nb').textContent=n||''}
+const show=h=>{$('mb').innerHTML=h;$('md').hidden=false},closeM=()=>{$('md').hidden=true},err=m=>{$('er').textContent=m};
+function toast(m){const t=$('toast');t.textContent=m;t.hidden=false;clearTimeout(th);th=setTimeout(()=>t.hidden=true,1400)}
+let S2='',CAT='',SUB='',F={},qn=1;try{F=JSON.parse(localStorage.getItem('safi_fav'))||{}}catch(e){}
+const pct=p=>p.oldPrice>p.price?Math.round((1-p.price/p.oldPrice)*100):0;
+const card=(p,i)=>`<div class="card${p.big?' bigc':''}" style="--i:${Math.min(i,8)}">${pct(p)?`<span class="sv">-${pct(p)}%</span>`:''}<button class="hrt ${F[p.id]?'on':''}" onclick="fav('${p.id}')" aria-label="Save">♥</button><div class="im" onclick="qv('${p.id}')"><span class="ph">${esc((p.name||'?')[0].toUpperCase())}</span>${okImg(p.img)?`<img src="${esc(p.img)}" alt="" loading="lazy" onerror="this.remove()">`:''}</div><h3 onclick="qv('${p.id}')">${esc(p.name)}</h3><p class="pr">${money(p.price)}</p>${pct(p)?`<p class="old">${money(p.oldPrice)}</p>`:''}<button class="add" onclick="add('${p.id}',this)">Add to cart</button></div>`;
+function cats(){const m={};P.forEach(p=>{const c=(p.category||'').trim();if(c&&!m[c])m[c]=p});const k=Object.keys(m);$('cats').hidden=!k.length;
+ $('cats').innerHTML=k.length?`<button class="cat ${CAT?'':'on'}" data-c="" onclick="setCat(this.dataset.c)"><div class="ci">★</div>All</button>`+k.map(c=>`<button class="cat ${CAT===c?'on':''}" data-c="${esc(c)}" onclick="setCat(this.dataset.c)"><div class="ci">${okImg(m[c].img)?`<img src="${esc(m[c].img)}" alt="" onerror="this.remove()">`:esc(c[0].toUpperCase())}</div>${esc(c)}</button>`).join(''):''}
+function grid(){cats();const q=$('q').value.trim().toLowerCase();let L=P.filter(p=>!q||String(p.name).toLowerCase().includes(q)).sort(ord);
+ if(CAT)L=L.filter(p=>(p.category||'').trim()===CAT);if(SUB)L=L.filter(p=>(p.subcategory||'').trim()===SUB);if(S2==='fav')L=L.filter(p=>F[p.id]);if(S2==='lo')L=[...L].sort((a,b)=>a.price-b.price);if(S2==='hi')L=[...L].sort((a,b)=>b.price-a.price);
+ const D=P.filter(p=>pct(p)>0).sort(ord);$('dealsec').hidden=!D.length;$('flt').innerHTML=(CAT||SUB)?`<button class="ghost" onclick="clearF()">${esc(CAT)}${SUB?' › '+esc(SUB):''} ✕</button>`:'';$('deals').innerHTML=D.map(card).join('');
+ $('grid').innerHTML=L.length?L.map(card).join(''):`<p class="mut empty">${S2==='fav'?'No saved products yet. Tap the heart on a product.':P.length?'No products match your search.':'No products yet. Please check back soon.'}</p>`}
+function setCat(c){CAT=c;SUB='';grid()}
+function catSheet(){catPage()}
+function pickCat(b){setCat(b.dataset.c);closeM();document.getElementById('grid').scrollIntoView({behavior:'smooth'})}
+const home=()=>scrollTo({top:0,behavior:'smooth'}),deals=()=>($('dealsec').hidden?$('grid'):$('dealsec')).scrollIntoView({behavior:'smooth'});
+let SITE={};const ord=(a,b)=>(a.order!=null?a.order:1e15)-(b.order!=null?b.order:1e15);
+function look(){const S=SITE,n=(v,a,b)=>(v=+v)>=a&&v<=b?v:0,h=$('hh'),p=$('hp'),c=n(S.cols,1,3),ce=S.align==='center';
+ if(typeof S.h1==='string'&&S.h1.trim())h.textContent=S.h1.slice(0,80);if(typeof S.sub==='string')p.textContent=S.sub.slice(0,160);
+ h.style.fontSize=n(S.h1s,18,60)?S.h1s+'px':'';p.style.fontSize=n(S.subs,11,26)?S.subs+'px':'';
+ h.parentElement.style.textAlign=ce?'center':'';p.style.marginInline=ce?'auto':'';$('hc').style.justifyContent=ce?'center':'';$('hc').hidden=S.chips===false;
+ if(c){const r=document.documentElement.style;r.setProperty('--c',c);r.setProperty('--w',[0,'320px','220px','160px'][c])}
+ const ms=PAYS.filter(payOn);if(ms.length)$('hc').innerHTML=ms.map(k=>`<span class="chip">${esc(k)}</span>`).join('');
+ h.parentElement.classList.add('ready')}
+function add(id,b){C[id]=(C[id]||0)+1;sv();toast('Added to cart');bump();if(b){b.textContent='Added ✓';setTimeout(()=>b.textContent='Add to cart',900)}}
+function qty(id,d){C[id]=(C[id]||0)+d;if(C[id]<1)delete C[id];sv();cart()}
+function cart(){const L=lines();show('<h2>Your cart</h2>'+(L.length?L.map(x=>`<div class="row"><span><b>${esc(x.p.name)}</b><br><small>${money(x.p.price)}</small></span><span><button class="q" onclick="qty('${x.p.id}',-1)">−</button> <b>${x.q}</b> <button class="q" onclick="qty('${x.p.id}',1)">+</button></span></div>`).join('')+`<p class="tot">Total ${money(total())}</p><button class="pri" style="width:100%" onclick="co()">Checkout</button>`:'<p class="mut">Your cart is empty.</p>'))}
+const PAYS=['JazzCash','EasyPaisa','Bank Transfer','Cash on Delivery'],payOn=k=>G[k]&&G[k].on&&(k==='Cash on Delivery'||G[k].num);
+function co(){const on=PAYS.filter(payOn);if(!on.length)return show('<h2>Checkout</h2><p>Online payment is not available right now. Please try again later.</p>');M=on[0];
+ show(`<h2>Checkout</h2><input id="nm" placeholder="Your name" maxlength="80"><input id="ph" inputmode="tel" placeholder="Mobile number, like 03001234567"><textarea id="ad" rows="2" placeholder="Full delivery address" maxlength="300"></textarea><p class="tot">Total ${money(total())} · choose how to pay</p><div class="pays">${on.map(k=>`<button id="m-${k}" onclick="pick('${k}')">${k}</button>`).join('')}</div><p id="gi"></p><input id="tid" placeholder="Transaction ID from your payment slip" maxlength="40"><p id="er" class="err"></p><button id="pb" class="pri" style="width:100%" onclick="place()">Place order</button>`);pick(M)}
+function pick(k){M=k;PAYS.forEach(x=>{const b=document.getElementById('m-'+x);if(b)b.className=x===k?'sel':''});const g=G[k]||{},c=k==='Cash on Delivery';$('tid').hidden=c;
+ $('gi').innerHTML=c?'Pay <b>cash</b> to the rider when your order arrives.':k==='Bank Transfer'?`Transfer <b>${money(total())}</b> to <b>${esc(g.bank||'')}</b><br>Account title: <b>${esc(g.title)}</b><br>IBAN / Account: <b>${esc(g.num)}</b><br>Then enter your transaction / reference ID below.`:`Send the money to <b>${esc(g.num)}</b> (${esc(g.title)}), then enter the Transaction ID below.`}
 async function place(){const v=id=>$(id).value.trim(),ph=v('ph').replace(/[\s-]/g,''),L=lines();
- if(!v('nm'))return err('Enter your name.');if(!/^(\+92|0)3\d{9}$/.test(ph))return err('Enter a valid mobile number, like 03001234567.');if(v('ad').length<8)return err('Enter your full delivery address.');if(!/^[A-Za-z0-9]{6,40}$/.test(v('tid')))return err('Transaction ID needs 6 to 40 letters or numbers.');if(!L.length)return err('Your cart is empty.');
+ if(!v('nm'))return err('Enter your name.');if(!/^(\+92|0)3\d{9}$/.test(ph))return err('Enter a valid mobile number, like 03001234567.');if(v('ad').length<8)return err('Enter your full delivery address.');if(M!=='Cash on Delivery'&&!/^[A-Za-z0-9]{6,40}$/.test(v('tid')))return err('Transaction ID needs 6 to 40 letters or numbers.');if(!L.length)return err('Your cart is empty.');
  $('pb').disabled=true;err('');
- try{const r=await addDoc(collection(db,'orders'),{items:L.map(x=>({id:x.p.id,name:x.p.name,price:x.p.price,qty:x.q})),total:total(),name:v('nm'),phone:ph,address:v('ad'),method:M,tid:v('tid'),status:'PENDING',ts:serverTimestamp()});
-  C={};sv();show(`<h2>Order received</h2><p>Your order number is <b>${r.id.slice(0,6).toUpperCase()}</b>. We will confirm after checking your payment.</p>`)}
+ try{const r=await addDoc(collection(db,'orders'),{items:L.map(x=>({id:x.p.id,name:x.p.name,price:x.p.price,qty:x.q})),total:total(),name:v('nm'),phone:ph,address:v('ad'),method:M,tid:M==='Cash on Delivery'?'COD-'+Math.random().toString(36).slice(2,8).toUpperCase():v('tid'),status:'PENDING',ts:serverTimestamp()});
+  C={};sv();burst();show(`<h2>Order received ✓</h2><p>Your order number is <b>${r.id.slice(0,6).toUpperCase()}</b>. ${M==='Cash on Delivery'?'We will contact you to confirm it. Pay the rider when it arrives.':'We will confirm after checking your payment.'}</p>`)}
  catch(e){$('pb').disabled=false;err('Could not place the order. Check your connection and try again.')}}
-Object.assign(window,{add,qty,cart,co,pick,place,closeM});
-$('cb').onclick=cart;sv();
-try{P=(await getDocs(collection(db,'products'))).docs.map(d=>({id:d.id,...d.data()})).filter(p=>p.active!==false&&p.price>0);const s=await getDoc(doc(db,'settings','payments'));G=s.exists()?s.data():{};grid()}
-catch(e){$('grid').innerHTML='<p class="mut">Could not load products. Please refresh the page.</p>'}
+function bump(){const b=$('cb');b.classList.remove('bump');void b.offsetWidth;b.classList.add('bump')}
+function fav(id){F[id]?delete F[id]:F[id]=1;try{localStorage.setItem('safi_fav',JSON.stringify(F))}catch(e){}grid()}
+function qv(id){const p=P.find(x=>x.id===id);if(!p)return;qn=1;show(`<div class="im big"><span class="ph">${esc((p.name||'?')[0].toUpperCase())}</span>${okImg(p.img)?`<img src="${esc(p.img)}" alt="" onerror="this.remove()">`:''}</div><h2>${esc(p.name)}</h2><p class="pr big">${money(p.price)}</p><div class="row" style="border:0"><span>Quantity</span><span><button class="q" onclick="qb(-1)">−</button> <b id="qn">1</b> <button class="q" onclick="qb(1)">+</button></span></div><button class="pri" style="width:100%" onclick="addq('${p.id}')">Add to cart</button>`)}
+function qb(d){qn=Math.max(1,Math.min(20,qn+d));$('qn').textContent=qn}
+function addq(id){C[id]=(C[id]||0)+qn;sv();closeM();toast('Added to cart');bump()}
+function theme(){const r=document.documentElement,dark=r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme:dark)').matches;r.dataset.theme=dark?'light':'dark';try{localStorage.setItem('safi_theme',r.dataset.theme)}catch(e){}}
+function burst(){if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;const c=document.createElement('div');c.className='cf';for(let i=0;i<30;i++){const e=document.createElement('i');e.style.cssText=`left:${Math.random()*100}%;background:hsl(${Math.random()*360} 85% 60%);animation-delay:${Math.random()*.4}s;--r:${Math.random()*720-360}deg`;c.appendChild(e)}document.body.appendChild(c);setTimeout(()=>c.remove(),2400)}
+try{const t=localStorage.getItem('safi_theme');if(t)document.documentElement.dataset.theme=t}catch(e){}
+const mqh=['Fresh picks','Easy checkout','JazzCash','EasyPaisa'].map(t=>`<span>${t}</span>`).join('').repeat(3);$('mq').innerHTML='<div>'+mqh+mqh+'</div>';
+$('seg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S2=b.dataset.s;[...$('seg').children].forEach(x=>x.classList.toggle('on',x===b));grid()};
+document.addEventListener('pointermove',e=>{const c=e.target.closest&&e.target.closest('.card');if(c){const r=c.getBoundingClientRect();c.style.setProperty('--mx',e.clientX-r.left+'px');c.style.setProperty('--my',e.clientY-r.top+'px')}});
+function track(){try{let id=sessionStorage.getItem('safi_sid');const first=!id;if(first){id=Math.random().toString(36).slice(2,10)+Date.now().toString(36);sessionStorage.setItem('safi_sid',id)}
+ const beat=()=>{if(document.visibilityState==='visible')setDoc(doc(db,'visitors',id),{ts:serverTimestamp()}).catch(()=>{})};beat();setInterval(beat,45000);document.addEventListener('visibilitychange',beat);
+ if(first)setDoc(doc(db,'stats',new Date().toLocaleDateString('en-CA')),{n:increment(1)},{merge:true}).catch(()=>{})}catch(e){}}
+const catKeys=()=>[...new Set(P.map(p=>(p.category||'').trim()).filter(Boolean))];let CP='';
+function catPage(){const ks=catKeys();if(!ks.length)return show('<h2>Categories</h2><p class="mut">No categories yet.</p>');CP=ks.includes(CAT)?CAT:ks[0];$('cp').hidden=false;drawCP()}
+function closeCP(){$('cp').hidden=true}
+function cpSel(c){CP=c;drawCP()}
+function drawCP(){const ks=catKeys(),L=P.filter(p=>(p.category||'').trim()===CP),subs={};L.forEach(p=>{const s=(p.subcategory||'').trim();if(s&&!subs[s])subs[s]=p});const sk=Object.keys(subs);
+ const tile=(img,name,attr,fn)=>`<button class="tl" ${attr} onclick="${fn}(this)"><div class="ti">${okImg(img)?`<img src="${esc(img)}" alt="" onerror="this.remove()">`:esc(String(name)[0].toUpperCase())}</div>${esc(name)}</button>`;
+ $('cpl').innerHTML=ks.map(c=>`<button class="${CP===c?'on':''}" data-c="${esc(c)}" onclick="cpSel(this.dataset.c)">${esc(c)}</button>`).join('');
+ $('cpr').innerHTML=`<h3 class="cpt">${esc(CP)}</h3><div class="tg3">`+(sk.length?tile(L[0].img,'All '+CP,'data-s=""','cpPick')+sk.map(s=>tile(subs[s].img,s,`data-s="${esc(s)}"`,'cpPick')).join(''):L.map(p=>tile(p.img,p.name,`data-id="${p.id}"`,'cpProd')).join(''))+'</div>'}
+function cpPick(b){CAT=CP;SUB=b.dataset.s;closeCP();grid();document.getElementById('grid').scrollIntoView({behavior:'smooth'})}
+function cpProd(b){closeCP();qv(b.dataset.id)}
+function clearF(){CAT='';SUB='';grid()}
+Object.assign(window,{catPage,closeCP,cpSel,cpPick,cpProd,clearF,add,qty,cart,co,pick,place,closeM,grid,fav,qv,qb,addq,theme,setCat,catSheet,pickCat,home,deals});
+track();$('cb').onclick=cart;sv();
+try{P=(await getDocs(collection(db,'products'))).docs.map(d=>({id:d.id,...d.data()})).filter(p=>p.active!==false&&p.price>0);const s=await getDoc(doc(db,'settings','payments'));G=s.exists()?s.data():{};try{const s2=await getDoc(doc(db,'settings','site'));SITE=s2.exists()?s2.data():{}}catch(e){}look();grid();sv()}
+catch(e){$('hh').parentElement.classList.add('ready');$('grid').innerHTML='<p class="mut empty">Could not load products. Please refresh the page.</p>'}
 </script>
 </body>
 </html>
